@@ -1,13 +1,13 @@
 Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.5.3 
 Created-By: Apache Jakarta Maven
-Built-By: brett
-Package: org.apache.maven
+Built-By: tryggvil
+Package: com.idega.maven.bundle
 Build-Jdk: 1.4.2_03
-Extension-Name: maven-war-plugin
-Specification-Title: War Plugin for Maven
-Specification-Vendor: Apache Software Foundation
-Implementation-Title: org.apache.maven
-Implementation-Vendor: Apache Software Foundation
-Implementation-Version: 1.6
+Extension-Name: idegaweb-bundle-plugin
+Specification-Title: idegaweb Bundle Plugin for Maven
+Specification-Vendor: idega Software
+Implementation-Title: com.idega.maven.bundle
+Implementation-Vendor: idega Software
+Implementation-Version: 1.0
 

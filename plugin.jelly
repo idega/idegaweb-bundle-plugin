@@ -1,85 +1,71 @@
 <?xml version="1.0"?>
 <!-- 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Copyright 2004 idega Software
  */
  -->
-
 
 <project xmlns:j="jelly:core"
          xmlns:license="license"
          xmlns:util="jelly:util"
          xmlns:ant="jelly:ant"
-         xmlns:artifact="artifact"
-         xmlns:caller="caller">
+         xmlns:artifact="artifact">
 
   <!--==================================================================-->
-  <!-- Default goal : Builds a war file                                 -->
+  <!-- Default goal : Build an idegaweb bundle file                      -->
   <!--==================================================================-->    
-  <goal name="war" prereqs="war:war" description="Build a war file"/>
+  <goal name="iw-bundle" prereqs="iw-bundle:iwbar" description="Build an idegaweb bundle file"/>
 
   <!--==================================================================-->
   <!-- Initializations                                                  -->
   <!--==================================================================-->    
-  <goal name="war:init"
+  <goal name="iw-bundle:init"
     description="Initialize the file system and attain any necessary goals">
 
     <ant:available property="webSourcesPresent" type="dir"
-      file="${maven.war.src}"/>
+      file="${idegaweb.bundle.src}"/>
 
-    <ant:property name="maven.war.final.name" 
-      value="${pom.artifactId}.war"/>
+    <ant:property name="idegaweb.bundle.final.name" 
+      value="${pom.artifactId}-${pom.currentVersion}.iwbar"/>
  
   </goal>
   
   <!--==================================================================-->
-  <!-- Builds a war file                                                -->
+  <!-- Builds a iwbar file                                                -->
   <!--==================================================================-->    
-  <goal name="war:war" prereqs="war:webapp" description="Build a war file">
+  <goal name="iw-bundle:iwbar" prereqs="iw-bundle:bundle" description="Build an iwbar (idegaWeb Bundle Archive) file">
     
-    <ant:echo>Building WAR ${pom.artifactId}</ant:echo>
+    <ant:echo>Building bundle ${pom.artifactId}</ant:echo>
 
     <!-- build dependency list -->
-    <j:set var="maven.war.classpath" value=""/>
+    <j:set var="idegaweb.bundle.classpath" value=""/>
     <j:forEach var="dep" items="${pom.dependencies}">
       <j:if test="${dep.getProperty('war.manifest.classpath')=='true'}">
-        <j:set var="maven.war.classpath" value="${maven.war.classpath} ${dep.artifact}"/>
+        <j:set var="idegaweb.bundle.classpath" value="${idegaweb.bundle.classpath} ${dep.artifact}"/>
       </j:if>
     </j:forEach>
     
-    <ant:available property="maven.war.manifest.available"
-      file="${maven.war.manifest}"/>
+    <ant:available property="idegaweb.bundle.manifest.available"
+      file="${idegaweb.bundle.manifest}"/>
 
-    <ant:mkdir dir="${maven.war.build.dir}" />
+    <ant:mkdir dir="${idegaweb.bundle.build.dir}" />
     <ant:jar 
-         destfile="${maven.war.build.dir}/${maven.war.final.name}"
-         basedir="${maven.war.webapp.dir}"         
+         destfile="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
+         basedir="${idegaweb.bundle.webapp.dir}"         
          update="true"
-         index="${maven.war.index}">
+         index="${idegaweb.bundle.index}">
       <ant:metainf dir="${licenseFile.canonicalFile.parent}">
         <ant:include name="${licenseFile.canonicalFile.name}"/>
       </ant:metainf>
 
-      <j:if test="${maven.war.manifest.available}">
-        <ant:setProperty name="manifest" value="${maven.war.manifest}" />
+      <j:if test="${idegaweb.bundle.manifest.available}">
+        <ant:setProperty name="manifest" value="${idegaweb.bundle.manifest}" />
       </j:if>
 
       <ant:manifest>
-        <j:set var="classPath" value="${maven.war.classpath}"/>
+        <j:set var="classPath" value="${idegaweb.bundle.classpath}"/>
         <j:if test="${!empty(classPath)}">
-            <ant:attribute name="Class-Path" value="${maven.war.classpath}"/>
+            <ant:attribute name="Class-Path" value="${idegaweb.bundle.classpath}"/>
         </j:if>
 
         <ant:attribute name="Built-By" value="${user.name}" />
@@ -103,46 +89,45 @@
   </goal>
 
   <!--==================================================================-->
-  <!-- Builds an expanded webapp                                        -->
+  <!-- Builds an expanded bundle                                        -->
   <!--==================================================================-->    
-  <goal name="war:webapp" prereqs="war:init,test:test" 
-    description="Build a webapp directory">
+  <goal name="iw-bundle:bundle" prereqs="iw-bundle:init,test:test,jar" 
+    description="Build a bundle directory">
 
-    <ant:echo>Assembling webapp ${pom.artifactId}</ant:echo>
+    <ant:echo>Assembling bundle ${pom.artifactId}</ant:echo>
 
-    <ant:mkdir dir="${maven.war.webapp.dir}"/>
+    <ant:mkdir dir="${idegaweb.bundle.webapp.dir}"/>
 
-    <j:set var="webapp.build.webinf" value="${maven.war.webapp.dir}/WEB-INF"/>
+    <j:set var="webapp.build.webinf" value="${idegaweb.bundle.webapp.dir}/WEB-INF"/>
     <ant:mkdir dir="${webapp.build.webinf}"/>
 
     <j:set var="webapp.build.lib" value="${webapp.build.webinf}/lib"/>
     <ant:mkdir dir="${webapp.build.lib}"/>
     
-    <j:set var="webapp.build.tlds" value="${maven.war.webapp.dir}/${maven.war.tld.dir}"/>
+    <j:set var="webapp.build.tlds" value="${idegaweb.bundle.webapp.dir}/${idegaweb.bundle.tld.dir}"/>
     <ant:mkdir dir="${webapp.build.tlds}"/>
     
     <j:set var="webapp.build.classes" value="${webapp.build.webinf}/classes"/>
     <ant:mkdir dir="${webapp.build.classes}"/>
 
     <j:if test="${webSourcesPresent == 'true'}">
-      <ant:copy todir="${maven.war.webapp.dir}" preservelastmodified="true">
-        <ant:fileset dir="${maven.war.src}"
-          includes="${maven.war.src.includes}"
-          excludes="${maven.war.src.excludes}">
+      <ant:copy todir="${idegaweb.bundle.webapp.dir}" preservelastmodified="true">
+        <ant:fileset dir="${idegaweb.bundle.src}"
+          includes="${idegaweb.bundle.src.includes}"
+          excludes="${idegaweb.bundle.src.excludes}">
         </ant:fileset>
       </ant:copy>
     </j:if>
     
-    <util:available file="${maven.war.webxml}">
-      <ant:copy file="${maven.war.webxml}"
+    <util:available file="${idegaweb.bundle.webxml}">
+      <ant:copy file="${idegaweb.bundle.webxml}"
         tofile="${webapp.build.webinf}/web.xml"
         overwrite="true" />
     </util:available>
 
     <j:forEach var="lib" items="${pom.artifacts}">
-      <j:set var="dep" value="${lib.dependency}"/>     
-      <j:if test="${dep.getProperty('war.bundle')=='true'}">
-          
+      <j:set var="dep" value="${lib.dependency}"/>
+      <j:if test="${dep.getProperty('idegaweb.bundle.include')=='true'}">
          <j:if test="${dep.type =='jar'}"> 
            <ant:copy todir="${webapp.build.lib}" file="${lib.path}"/>  
          </j:if> 
@@ -151,43 +136,37 @@
            <ant:copy todir="${webapp.build.tlds}" file="${lib.path}"/>  
          </j:if> 
           
-      </j:if>  
-      <!-- TO BE REMOVED -->
-      <j:if test="${dep.getProperty('war.bundle.jar')=='true'}">
-         <ant:echo> 
-            DEPRECATION WARNING:            
-            Use : war.bundle instead of war.bundle.jar
-          </ant:echo>
-        <ant:copy todir="${webapp.build.lib}" file="${lib.path}"/>
-      </j:if>  
-      <!-- END OF TO BE REMOVED -->
-
+      </j:if>
       <j:set var="targetPath" value="${dep.getProperty('war.target.path')}"/> 
       <j:if test="${!empty(targetPath)}">
-        <ant:copy todir="${maven.war.webapp.dir}/${targetPath}" file="${lib.path}"/>
+        <ant:copy todir="${idegaweb.bundle.webapp.dir}/${targetPath}" file="${lib.path}"/>
       </j:if>
-    </j:forEach>            
+    </j:forEach>
 
+<ant:copy todir="${webapp.build.lib}" file="${maven.build.dir}/${maven.final.name}.jar"/>  
+
+<!--
     <util:available file="${maven.build.dest}">
       <ant:copy todir="${webapp.build.classes}">
         <ant:fileset dir="${maven.build.dest}"
-          includes="${maven.war.classes.includes}"
-          excludes="${maven.war.classes.excludes}">
+          includes="${idegaweb.bundle.classes.includes}"
+          excludes="${idegaweb.bundle.classes.excludes}">
         </ant:fileset>
       </ant:copy>
     </util:available>
+-->
 
   </goal>
 
   <!--==================================================================-->
-  <!-- Install the war in the local repository                          -->
+  <!-- Install the bundle in the local repository                          -->
   <!--==================================================================-->    
-  <goal name="war:install"
-        prereqs="war:war"
+  <goal name="iw-bundle:install"
+        prereqs="iw-bundle:iwbar"
         description="Install the war in the local repository">
      
      <artifact:install
-        artifact="${maven.war.build.dir}/${maven.war.final.name}"
+        artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
         type="war"
         project="${pom}"/> 
   
@@ -196,12 +175,12 @@
   <!--==================================================================-->
   <!-- Install the snapshot version of the war in the local repository  -->
   <!--==================================================================-->      
-  <goal name="war:install-snapshot"
-        prereqs="war:war" 
+  <goal name="iw-bundle:install-snapshot"
+        prereqs="iw-bundle:iwbar" 
         description="Install the snapshot version of the war in the local repository">
         
       <artifact:install-snapshot
-        artifact="${maven.war.build.dir}/${maven.war.final.name}"
+        artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
         type="war"
         project="${pom}"/> 
         
@@ -210,12 +189,12 @@
   <!--==================================================================-->
   <!-- Deploys the war to the remote repository                         -->
   <!--==================================================================-->      
-  <goal name="war:deploy" 
-        prereqs="war:war" 
-        description="Deploys the war to the remote repository">
+  <goal name="iw-bundle:deploy" 
+        prereqs="iw-bundle:iwbar" 
+        description="Deploys the bundle to the remote repository">
 
      <artifact:deploy
-        artifact="${maven.war.build.dir}/${maven.war.final.name}"
+        artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
         type="war"
         project="${pom}"/>   
         
@@ -224,12 +203,12 @@
   <!--==================================================================-->
   <!-- Deploys the snapshot of the war to the remote repository         -->
   <!--==================================================================-->      
-  <goal name="war:deploy-snapshot" 
-        prereqs="war:war"
-        description="Deploys the snapshot version of  the war to remote repository">  
+  <goal name="iw-bundle:deploy-snapshot" 
+        prereqs="iw-bundle:iwbar"
+        description="Deploys the snapshot version of  the bundle to remote repository">  
 
      <artifact:deploy-snapshot
-        artifact="${maven.war.build.dir}/${maven.war.final.name}"
+        artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
         type="war"
         project="${pom}"/>    
         
@@ -239,24 +218,24 @@
   <!--==================================================================-->
   <!-- Clean                                                            -->
   <!--==================================================================-->  
-    <goal name="war:clean"
-        prereqs="war:init"
+    <goal name="iw-bundle:clean"
+        prereqs="iw-bundle:init"
         description="Remove all artifacts created by war plugin">  
 
       <!-- TODO: delete also snapshot and md5 files -->
-      <j:if test="${context.getVariable('maven.war.webapp.dir') != context.getVariable('maven.war.src')}">
-        <ant:delete dir="${maven.war.webapp.dir}"/>
+      <j:if test="${context.getVariable('idegaweb.bundle.webapp.dir') != context.getVariable('idegaweb.bundle.src')}">
+        <ant:delete dir="${idegaweb.bundle.webapp.dir}"/>
       </j:if>
-      <ant:delete file="${maven.war.build.dir}/${maven.war.final.name}" quiet="true" failonerror="false"/>          
+      <ant:delete file="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}" quiet="true" failonerror="false"/>          
     </goal>
     
   <!--==================================================================-->
   <!-- In-place deployment of the web application                       -->
   <!--==================================================================-->  
-  <goal name="war:inplace"
-    description="Deploy a webapp into maven.war.src - in particular setting up WEB-INF/lib and WEB-INF/classes">
-    <j:set var="maven.war.webapp.dir" value="${maven.war.src}"/>
-    <attainGoal name="war:webapp"/>
+  <goal name="iw-bundle:inplace"
+    description="Deploy a webapp into idegaweb.bundle.src - in particular setting up WEB-INF/lib and WEB-INF/classes">
+    <j:set var="idegaweb.bundle.webapp.dir" value="${idegaweb.bundle.src}"/>
+    <attainGoal name="iw-bundle:bundle"/>
   </goal> 
 
   <!--==================================================================-->
@@ -264,7 +243,7 @@
   <!-- to get access to any of this plugin's property. This is          -->
   <!-- temporary, until we get explicit plugin dependencies.            -->
   <!--==================================================================-->    
-  <goal name="war:load"/>
+  <goal name="iw-bundle:load"/>
 
 </project>
 
