@@ -162,7 +162,7 @@
   <!-- Install the bundle in the local repository                          -->
   <!--==================================================================-->    
   <goal name="iw-bundle:install"
-        prereqs="iw-bundle:iwbar"
+        prereqs="jar:install,iw-bundle:iwbar"
         description="Install the war in the local repository">
      
      <artifact:install
@@ -173,11 +173,11 @@
   </goal>
   
   <!--==================================================================-->
-  <!-- Install the snapshot version of the war in the local repository  -->
+  <!-- Install the snapshot version of the bundle in the local repository  -->
   <!--==================================================================-->      
   <goal name="iw-bundle:install-snapshot"
-        prereqs="iw-bundle:iwbar" 
-        description="Install the snapshot version of the war in the local repository">
+        prereqs="jar:install-snapshot,iw-bundle:iwbar" 
+        description="Install the snapshot version of the bundle in the local repository">
         
       <artifact:install-snapshot
         artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
@@ -187,10 +187,10 @@
   </goal>
 
   <!--==================================================================-->
-  <!-- Deploys the war to the remote repository                         -->
+  <!-- Deploys the bundle to the remote repository                         -->
   <!--==================================================================-->      
   <goal name="iw-bundle:deploy" 
-        prereqs="iw-bundle:iwbar" 
+        prereqs="jar:deploy,iw-bundle:iwbar" 
         description="Deploys the bundle to the remote repository">
 
      <artifact:deploy
@@ -201,10 +201,10 @@
   </goal>      
         
   <!--==================================================================-->
-  <!-- Deploys the snapshot of the war to the remote repository         -->
+  <!-- Deploys the snapshot of the bundle to the remote repository         -->
   <!--==================================================================-->      
   <goal name="iw-bundle:deploy-snapshot" 
-        prereqs="iw-bundle:iwbar"
+        prereqs="jar:deploy-snaphot,iw-bundle:iwbar"
         description="Deploys the snapshot version of  the bundle to remote repository">  
 
      <artifact:deploy-snapshot
@@ -220,7 +220,7 @@
   <!--==================================================================-->  
     <goal name="iw-bundle:clean"
         prereqs="iw-bundle:init"
-        description="Remove all artifacts created by war plugin">  
+        description="Remove all artifacts created by bundle plugin">  
 
       <!-- TODO: delete also snapshot and md5 files -->
       <j:if test="${context.getVariable('idegaweb.bundle.webapp.dir') != context.getVariable('idegaweb.bundle.src')}">
@@ -230,10 +230,10 @@
     </goal>
     
   <!--==================================================================-->
-  <!-- In-place deployment of the web application                       -->
+  <!-- In-place deployment of the bundle			                     -->
   <!--==================================================================-->  
   <goal name="iw-bundle:inplace"
-    description="Deploy a webapp into idegaweb.bundle.src - in particular setting up WEB-INF/lib and WEB-INF/classes">
+    description="Deploy a bundle into idegaweb.bundle.src - in particular setting up WEB-INF/lib and WEB-INF/classes">
     <j:set var="idegaweb.bundle.webapp.dir" value="${idegaweb.bundle.src}"/>
     <attainGoal name="iw-bundle:bundle"/>
   </goal> 
