@@ -195,7 +195,7 @@
 
      <artifact:deploy
         artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
-        type="war"
+        type="iwbar"
         project="${pom}"/>   
         
   </goal>      
@@ -209,7 +209,7 @@
 
      <artifact:deploy-snapshot
         artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
-        type="war"
+        type="iwbar"
         project="${pom}"/>    
         
   </goal>
