@@ -1,0 +1,270 @@
+<?xml version="1.0"?>
+<!-- 
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ -->
+
+
+<project xmlns:j="jelly:core"
+         xmlns:license="license"
+         xmlns:util="jelly:util"
+         xmlns:ant="jelly:ant"
+         xmlns:artifact="artifact"
+         xmlns:caller="caller">
+
+  <!--==================================================================-->
+  <!-- Default goal : Builds a war file                                 -->
+  <!--==================================================================-->    
+  <goal name="war" prereqs="war:war" description="Build a war file"/>
+
+  <!--==================================================================-->
+  <!-- Initializations                                                  -->
+  <!--==================================================================-->    
+  <goal name="war:init"
+    description="Initialize the file system and attain any necessary goals">
+
+    <ant:available property="webSourcesPresent" type="dir"
+      file="${maven.war.src}"/>
+
+    <ant:property name="maven.war.final.name" 
+      value="${pom.artifactId}.war"/>
+ 
+  </goal>
+  
+  <!--==================================================================-->
+  <!-- Builds a war file                                                -->
+  <!--==================================================================-->    
+  <goal name="war:war" prereqs="war:webapp" description="Build a war file">
+    
+    <ant:echo>Building WAR ${pom.artifactId}</ant:echo>
+
+    <!-- build dependency list -->
+    <j:set var="maven.war.classpath" value=""/>
+    <j:forEach var="dep" items="${pom.dependencies}">
+      <j:if test="${dep.getProperty('war.manifest.classpath')=='true'}">
+        <j:set var="maven.war.classpath" value="${maven.war.classpath} ${dep.artifact}"/>
+      </j:if>
+    </j:forEach>
+    
+    <ant:available property="maven.war.manifest.available"
+      file="${maven.war.manifest}"/>
+
+    <ant:mkdir dir="${maven.war.build.dir}" />
+    <ant:jar 
+         destfile="${maven.war.build.dir}/${maven.war.final.name}"
+         basedir="${maven.war.webapp.dir}"         
+         update="true"
+         index="${maven.war.index}">
+      <ant:metainf dir="${licenseFile.canonicalFile.parent}">
+        <ant:include name="${licenseFile.canonicalFile.name}"/>
+      </ant:metainf>
+
+      <j:if test="${maven.war.manifest.available}">
+        <ant:setProperty name="manifest" value="${maven.war.manifest}" />
+      </j:if>
+
+      <ant:manifest>
+        <j:set var="classPath" value="${maven.war.classpath}"/>
+        <j:if test="${!empty(classPath)}">
+            <ant:attribute name="Class-Path" value="${maven.war.classpath}"/>
+        </j:if>
+
+        <ant:attribute name="Built-By" value="${user.name}" />
+        <ant:section name="${pom.package}">
+          <ant:attribute name="Specification-Title" value="${pom.artifactId}" />
+          <ant:attribute name="Specification-Version"
+                     value="${pom.currentVersion}" />
+          <ant:attribute name="Specification-Vendor"
+                     value="${pom.organization.name}" />
+          <ant:attribute name="Implementation-Title"
+                     value="${pom.package}" />
+          <ant:attribute name="Implementation-Version"
+                     value="${pom.currentVersion}" />
+          <ant:attribute name="Implementation-Vendor"
+                     value="${pom.organization.name}" />
+        </ant:section>
+      </ant:manifest>
+
+    </ant:jar>
+
+  </goal>
+
+  <!--==================================================================-->
+  <!-- Builds an expanded webapp                                        -->
+  <!--==================================================================-->    
+  <goal name="war:webapp" prereqs="war:init,test:test" 
+    description="Build a webapp directory">
+
+    <ant:echo>Assembling webapp ${pom.artifactId}</ant:echo>
+
+    <ant:mkdir dir="${maven.war.webapp.dir}"/>
+
+    <j:set var="webapp.build.webinf" value="${maven.war.webapp.dir}/WEB-INF"/>
+    <ant:mkdir dir="${webapp.build.webinf}"/>
+
+    <j:set var="webapp.build.lib" value="${webapp.build.webinf}/lib"/>
+    <ant:mkdir dir="${webapp.build.lib}"/>
+    
+    <j:set var="webapp.build.tlds" value="${maven.war.webapp.dir}/${maven.war.tld.dir}"/>
+    <ant:mkdir dir="${webapp.build.tlds}"/>
+    
+    <j:set var="webapp.build.classes" value="${webapp.build.webinf}/classes"/>
+    <ant:mkdir dir="${webapp.build.classes}"/>
+
+    <j:if test="${webSourcesPresent == 'true'}">
+      <ant:copy todir="${maven.war.webapp.dir}" preservelastmodified="true">
+        <ant:fileset dir="${maven.war.src}"
+          includes="${maven.war.src.includes}"
+          excludes="${maven.war.src.excludes}">
+        </ant:fileset>
+      </ant:copy>
+    </j:if>
+    
+    <util:available file="${maven.war.webxml}">
+      <ant:copy file="${maven.war.webxml}"
+        tofile="${webapp.build.webinf}/web.xml"
+        overwrite="true" />
+    </util:available>
+
+    <j:forEach var="lib" items="${pom.artifacts}">
+      <j:set var="dep" value="${lib.dependency}"/>     
+      <j:if test="${dep.getProperty('war.bundle')=='true'}">
+          
+         <j:if test="${dep.type =='jar'}"> 
+           <ant:copy todir="${webapp.build.lib}" file="${lib.path}"/>  
+         </j:if> 
+         
+         <j:if test="${dep.type =='tld'}"> 
+           <ant:copy todir="${webapp.build.tlds}" file="${lib.path}"/>  
+         </j:if> 
+          
+      </j:if>  
+      <!-- TO BE REMOVED -->
+      <j:if test="${dep.getProperty('war.bundle.jar')=='true'}">
+         <ant:echo> 
+            DEPRECATION WARNING:            
+            Use : war.bundle instead of war.bundle.jar
+          </ant:echo>
+        <ant:copy todir="${webapp.build.lib}" file="${lib.path}"/>
+      </j:if>  
+      <!-- END OF TO BE REMOVED -->
+
+      <j:set var="targetPath" value="${dep.getProperty('war.target.path')}"/> 
+      <j:if test="${!empty(targetPath)}">
+        <ant:copy todir="${maven.war.webapp.dir}/${targetPath}" file="${lib.path}"/>
+      </j:if>
+    </j:forEach>            
+
+    <util:available file="${maven.build.dest}">
+      <ant:copy todir="${webapp.build.classes}">
+        <ant:fileset dir="${maven.build.dest}"
+          includes="${maven.war.classes.includes}"
+          excludes="${maven.war.classes.excludes}">
+        </ant:fileset>
+      </ant:copy>
+    </util:available>
+
+  </goal>
+
+  <!--==================================================================-->
+  <!-- Install the war in the local repository                          -->
+  <!--==================================================================-->    
+  <goal name="war:install"
+        prereqs="war:war"
+        description="Install the war in the local repository">
+     
+     <artifact:install
+        artifact="${maven.war.build.dir}/${maven.war.final.name}"
+        type="war"
+        project="${pom}"/> 
+  
+  </goal>
+  
+  <!--==================================================================-->
+  <!-- Install the snapshot version of the war in the local repository  -->
+  <!--==================================================================-->      
+  <goal name="war:install-snapshot"
+        prereqs="war:war" 
+        description="Install the snapshot version of the war in the local repository">
+        
+      <artifact:install-snapshot
+        artifact="${maven.war.build.dir}/${maven.war.final.name}"
+        type="war"
+        project="${pom}"/> 
+        
+  </goal>
+
+  <!--==================================================================-->
+  <!-- Deploys the war to the remote repository                         -->
+  <!--==================================================================-->      
+  <goal name="war:deploy" 
+        prereqs="war:war" 
+        description="Deploys the war to the remote repository">
+
+     <artifact:deploy
+        artifact="${maven.war.build.dir}/${maven.war.final.name}"
+        type="war"
+        project="${pom}"/>   
+        
+  </goal>      
+        
+  <!--==================================================================-->
+  <!-- Deploys the snapshot of the war to the remote repository         -->
+  <!--==================================================================-->      
+  <goal name="war:deploy-snapshot" 
+        prereqs="war:war"
+        description="Deploys the snapshot version of  the war to remote repository">  
+
+     <artifact:deploy-snapshot
+        artifact="${maven.war.build.dir}/${maven.war.final.name}"
+        type="war"
+        project="${pom}"/>    
+        
+  </goal>
+  
+  
+  <!--==================================================================-->
+  <!-- Clean                                                            -->
+  <!--==================================================================-->  
+    <goal name="war:clean"
+        prereqs="war:init"
+        description="Remove all artifacts created by war plugin">  
+
+      <!-- TODO: delete also snapshot and md5 files -->
+      <j:if test="${context.getVariable('maven.war.webapp.dir') != context.getVariable('maven.war.src')}">
+        <ant:delete dir="${maven.war.webapp.dir}"/>
+      </j:if>
+      <ant:delete file="${maven.war.build.dir}/${maven.war.final.name}" quiet="true" failonerror="false"/>          
+    </goal>
+    
+  <!--==================================================================-->
+  <!-- In-place deployment of the web application                       -->
+  <!--==================================================================-->  
+  <goal name="war:inplace"
+    description="Deploy a webapp into maven.war.src - in particular setting up WEB-INF/lib and WEB-INF/classes">
+    <j:set var="maven.war.webapp.dir" value="${maven.war.src}"/>
+    <attainGoal name="war:webapp"/>
+  </goal> 
+
+  <!--==================================================================-->
+  <!-- Special no-op goal which can be used by other plugin which need  -->
+  <!-- to get access to any of this plugin's property. This is          -->
+  <!-- temporary, until we get explicit plugin dependencies.            -->
+  <!--==================================================================-->    
+  <goal name="war:load"/>
+
+</project>
+

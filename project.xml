@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- 
+/*
+ * Copyright 2001-2004 The Apache Software Foundation.
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ -->
+
+<project>
+  <extend>../plugin-parent/project.xml</extend>
+  <pomVersion>3</pomVersion>
+  <id>maven-war-plugin</id>
+  <name>Maven WAR Plugin</name>
+  <currentVersion>1.6</currentVersion>
+  <description>War Plugin for Maven</description>
+  <shortDescription>War Plugin for Maven</shortDescription>
+  <url>http://maven.apache.org/reference/plugins/war/</url>
+  <issueTrackingUrl>http://jira.codehaus.org/BrowseProject.jspa?id=10366</issueTrackingUrl>
+  <siteDirectory>/www/maven.apache.org/reference/plugins/war/</siteDirectory>
+  <repository>
+    <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:maven-plugins/war/</connection>
+    <developerConnection>scm:cvs:ext:${maven.username}@cvs.apache.org:/home/cvs:maven-plugins/war/</developerConnection>
+    <url>http://cvs.apache.org/viewcvs/maven-plugins/war/</url>
+  </repository>
+  <versions>
+    <version>
+      <id>1.5</id>
+      <name>1.5</name>
+      <tag>MAVEN_WAR_1_5</tag>
+    </version>
+    <version>
+      <id>1.6</id>
+      <name>1.6</name>
+      <tag>MAVEN_WAR_1_6</tag>
+    </version>
+  </versions>
+  <branches/>
+  <mailingLists/>
+  <developers>
+    <developer>
+      <name>Michal Maczka</name>
+      <id>michal</id>
+      <email>michal.maczka@dimatics.com</email>
+      <organization>Dimatics</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Vincent Massol</name>
+      <id>vmassol</id>
+      <email>vmassol@pivolis.com</email>
+      <organization>Pivolis</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+    <developer>
+      <name>Brett Porter</name>
+      <id>brett</id>
+      <email>brett@apache.org</email>
+      <organization>f2 network</organization>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+    </developer>
+  </developers>
+  <dependencies/>
+</project>
