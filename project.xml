@@ -1,32 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <project>
-    <extend>../plugin-parent/project.xml</extend>
-    <pomVersion>3</pomVersion>
-    <name>idegaWeb bundle plugin</name>
-    <groupId>maven-plugins</groupId>
-    <artifactId>idegaweb-bundle-plugin</artifactId>
-    <currentVersion>1.0</currentVersion>
-    <organization/>
-    <inceptionYear>2004</inceptionYear>
-    <description>idegaweb Bundle Plugin for Maven</description>
-    <shortDescription>idegaWeb bundle plugin for Maven</shortDescription>
-    <url>http://idega.com</url>
-    <issueTrackingUrl>http://jira.codehaus.org/BrowseProject.jspa?id=10366</issueTrackingUrl>
-    <siteDirectory>/www/maven.apache.org/reference/plugins/war/</siteDirectory>
-    <repository>
-        <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:maven-plugins/war/</connection>
-        <developerConnection>scm:cvs:ext:${maven.username}@cvs.apache.org:/home/cvs:maven-plugins/war/</developerConnection>
-    </repository>
-    <versions/>
-    <branches/>
-    <mailingLists/>
-    <developers>
-        <developer>
-            <name>Tryggvi Larusson</name>
-            <id>tryggvil</id>
-            <email>tryggvi@idega.is</email>
-            <organization>idega software</organization>
-            <roles/>
-        </developer>
-    </developers>
-    <properties/>
+  <extend>../plugin-parent/project.xml</extend>
+  <pomVersion>3</pomVersion>
+  <name>idegaWeb bundle plugin</name>
+  <groupId>maven-plugins</groupId>
+  <artifactId>idegaweb-bundle-plugin</artifactId>
+  <currentVersion>1.0</currentVersion>
+  <organization/>
+  <inceptionYear>2004</inceptionYear>
+  <description>idegaweb Bundle Plugin for Maven</description>
+  <shortDescription>idegaWeb bundle plugin for Maven</shortDescription>
+  <url>http://idega.com</url>
+  <issueTrackingUrl>http://jira.codehaus.org/BrowseProject.jspa?id=10366</issueTrackingUrl>
+  <siteDirectory>/www/maven.apache.org/reference/plugins/war/</siteDirectory>
+  <repository>
+    <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:maven-plugins/war/</connection>
+    <developerConnection>scm:cvs:ext:${maven.username}@einstein.idega.is:/idega/cvs:maven-plugins/${pom.artifactId}/</developerConnection>
+  </repository>
+  <versions>
+    <version>
+      <id>1.0</id>
+      <name>1.0</name>
+      <tag>BUNDLE_PLUGIN_1_0</tag>
+    </version>
+  </versions>
+  <branches/>
+  <mailingLists/>
+  <developers>
+    <developer>
+      <name>Tryggvi Larusson</name>
+      <id>tryggvil</id>
+      <email>tryggvi@idega.is</email>
+      <organization>idega software</organization>
+      <roles/>
+    </developer>
+  </developers>
+  <properties/>
 </project>
