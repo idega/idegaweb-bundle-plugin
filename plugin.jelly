@@ -163,11 +163,11 @@
   <!--==================================================================-->    
   <goal name="iw-bundle:install"
         prereqs="jar:install,iw-bundle:iwbar"
-        description="Install the war in the local repository">
+        description="Install the bundle into the local repository">
      
      <artifact:install
         artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
-        type="war"
+        type="iwbar"
         project="${pom}"/> 
   
   </goal>
@@ -181,7 +181,7 @@
         
       <artifact:install-snapshot
         artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
-        type="war"
+        type="iwbar"
         project="${pom}"/> 
         
   </goal>
@@ -204,7 +204,7 @@
   <!-- Deploys the snapshot of the bundle to the remote repository         -->
   <!--==================================================================-->      
   <goal name="iw-bundle:deploy-snapshot" 
-        prereqs="jar:deploy-snaphot,iw-bundle:iwbar"
+        prereqs="jar:deploy-snapshot,iw-bundle:iwbar"
         description="Deploys the snapshot version of  the bundle to remote repository">  
 
      <artifact:deploy-snapshot
