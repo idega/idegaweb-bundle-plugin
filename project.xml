@@ -6,7 +6,7 @@
   <name>idegaWeb bundle plugin</name>
   <groupId>maven-plugins</groupId>
   <artifactId>idegaweb-bundle-plugin</artifactId>
-  <currentVersion>1.3-SNAPSHOT</currentVersion>
+  <currentVersion>1.3</currentVersion>
   <organization/>
   <inceptionYear>2004</inceptionYear>
   <description>idegaweb Bundle Plugin for Maven</description>
@@ -15,7 +15,7 @@
   <issueTrackingUrl>http://jira.codehaus.org/BrowseProject.jspa?id=10366</issueTrackingUrl>
   <siteDirectory>/www/maven.apache.org/reference/plugins/war/</siteDirectory>
   <repository>
-    <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:maven-plugins/war/</connection>
+    <connection>scm:cvs:ext:${maven.username}@einstein.idega.is:/idega/cvs:maven-plugins/${pom.artifactId}/</connection>
     <developerConnection>scm:cvs:ext:${maven.username}@einstein.idega.is:/idega/cvs:maven-plugins/${pom.artifactId}/</developerConnection>
   </repository>
   <versions>
