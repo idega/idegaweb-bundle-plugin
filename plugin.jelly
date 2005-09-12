@@ -91,7 +91,16 @@
   <!--==================================================================-->
   <!-- Builds an expanded bundle                                        -->
   <!--==================================================================-->    
-  <goal name="iw-bundle:bundle" prereqs="clean,iw-bundle:init,test:test,jar" 
+  <goal name="iw-bundle:bundle" prereqs="clean" >
+  	<attainGoal name="iw-bundle:compile" />
+  </goal>
+  
+  
+  
+  <!--==================================================================-->
+  <!-- Compiles an expanded bundle                                        -->
+  <!--==================================================================-->    
+  <goal name="iw-bundle:compile" prereqs="iw-bundle:init,test:test,jar:jar" >  
     description="Build a bundle directory">
 
     <ant:echo>Assembling bundle ${pom.artifactId}</ant:echo>
@@ -162,8 +171,15 @@
   <!-- Install the bundle in the local repository                          -->
   <!--==================================================================-->    
   <goal name="iw-bundle:install"
-        prereqs="jar:install,iw-bundle:iwbar"
+        prereqs="iw-bundle:iwbar"
         description="Install the bundle into the local repository">
+     
+     <!-- attainGoal name="jar:install" /-->
+     
+	<artifact:install
+        artifact="${maven.build.dir}/${maven.final.name}.jar"
+        type="jar"
+        project="${pom}"/>
      
      <artifact:install
         artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
@@ -176,10 +192,17 @@
   <!-- Install the snapshot version of the bundle in the local repository  -->
   <!--==================================================================-->      
   <goal name="iw-bundle:install-snapshot"
-        prereqs="jar:install-snapshot,iw-bundle:iwbar" 
+        prereqs="iw-bundle:iwbar" 
         description="Install the snapshot version of the bundle in the local repository">
         
-      <artifact:install-snapshot
+	<!-- attainGoal name="jar:install-snapshot" /-->
+
+	<artifact:install-snapshot
+        artifact="${maven.build.dir}/${maven.final.name}.jar"
+        type="jar"
+        project="${pom}"/>
+     
+     <artifact:install-snapshot
         artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
         type="iwbar"
         project="${pom}"/> 
@@ -190,8 +213,15 @@
   <!-- Deploys the bundle to the remote repository                         -->
   <!--==================================================================-->      
   <goal name="iw-bundle:deploy" 
-        prereqs="jar:deploy,iw-bundle:iwbar,iw-bundle:install" 
+        prereqs="iw-bundle:install" 
         description="Deploys the bundle to the remote repository">
+
+	<!-- attainGoal name="jar:deploy" /-->
+
+	<artifact:deploy
+        artifact="${maven.build.dir}/${maven.final.name}.jar"
+        type="jar"
+        project="${pom}"/>
 
      <artifact:deploy
         artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
@@ -204,14 +234,21 @@
   <!-- Deploys the snapshot of the bundle to the remote repository         -->
   <!--==================================================================-->      
   <goal name="iw-bundle:deploy-snapshot" 
-        prereqs="jar:deploy-snapshot,iw-bundle:iwbar,iw-bundle:install-snapshot"
+        prereqs="iw-bundle:install-snapshot"
         description="Deploys the snapshot version of  the bundle to remote repository">  
+
+	<!-- attainGoal name="jar:deploy-snapshot" /-->
+     
+	<artifact:deploy-snapshot
+        artifact="${maven.build.dir}/${maven.final.name}.jar"
+        type="jar"
+        project="${pom}"/>
 
      <artifact:deploy-snapshot
         artifact="${idegaweb.bundle.build.dir}/${idegaweb.bundle.final.name}"
         type="iwbar"
-        project="${pom}"/>    
-        
+        project="${pom}"/>   
+
   </goal>
   
   
