@@ -15,8 +15,8 @@
   <issueTrackingUrl>http://jira.codehaus.org/BrowseProject.jspa?id=10366</issueTrackingUrl>
   <siteDirectory>/www/maven.apache.org/reference/plugins/war/</siteDirectory>
   <repository>
-    <connection>scm:cvs:ext:${maven.username}@einstein.idega.is:/idega/cvs:maven-plugins/${pom.artifactId}/</connection>
-    <developerConnection>scm:cvs:ext:${maven.username}@einstein.idega.is:/idega/cvs:maven-plugins/${pom.artifactId}/</developerConnection>
+    <connection>scm:cvs:ext:${cvs.username}@einstein.idega.is:/idega/cvs:maven-plugins/${pom.artifactId}/</connection>
+    <developerConnection>scm:cvs:ext:${cvs.username}@einstein.idega.is:/idega/cvs:maven-plugins/${pom.artifactId}/</developerConnection>
   </repository>
   <versions>
     <version>
