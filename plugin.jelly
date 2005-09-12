@@ -190,7 +190,7 @@
   <!-- Deploys the bundle to the remote repository                         -->
   <!--==================================================================-->      
   <goal name="iw-bundle:deploy" 
-        prereqs="jar:deploy,iw-bundle:iwbar" 
+        prereqs="jar:deploy,iw-bundle:iwbar,iw-bundle:install" 
         description="Deploys the bundle to the remote repository">
 
      <artifact:deploy
@@ -204,7 +204,7 @@
   <!-- Deploys the snapshot of the bundle to the remote repository         -->
   <!--==================================================================-->      
   <goal name="iw-bundle:deploy-snapshot" 
-        prereqs="jar:deploy-snapshot,iw-bundle:iwbar"
+        prereqs="jar:deploy-snapshot,iw-bundle:iwbar,iw-bundle:install-snapshot"
         description="Deploys the snapshot version of  the bundle to remote repository">  
 
      <artifact:deploy-snapshot
