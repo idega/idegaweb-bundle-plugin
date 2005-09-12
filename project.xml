@@ -6,7 +6,7 @@
   <name>idegaWeb bundle plugin</name>
   <groupId>maven-plugins</groupId>
   <artifactId>idegaweb-bundle-plugin</artifactId>
-  <currentVersion>1.4</currentVersion>
+  <currentVersion>1.5</currentVersion>
   <organization/>
   <inceptionYear>2004</inceptionYear>
   <description>idegaweb Bundle Plugin for Maven</description>

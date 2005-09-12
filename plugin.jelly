@@ -19,7 +19,7 @@
   <!--==================================================================-->
   <!-- Initializations                                                  -->
   <!--==================================================================-->    
-  <goal name="iw-bundle:init" prereqs="clean"
+  <goal name="iw-bundle:init"
     description="Initialize the file system and attain any necessary goals">
 
     <ant:available property="webSourcesPresent" type="dir"
@@ -91,7 +91,7 @@
   <!--==================================================================-->
   <!-- Builds an expanded bundle                                        -->
   <!--==================================================================-->    
-  <goal name="iw-bundle:bundle" prereqs="iw-bundle:init,test:test,jar" 
+  <goal name="iw-bundle:bundle" prereqs="clean,iw-bundle:init,test:test,jar" 
     description="Build a bundle directory">
 
     <ant:echo>Assembling bundle ${pom.artifactId}</ant:echo>
