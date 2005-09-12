@@ -39,6 +39,11 @@
       <name>1.4</name>
       <tag>BUNDLE_PLUGIN_1_4</tag>
     </version>
+    <version>
+      <id>1.5</id>
+      <name>1.5</name>
+      <tag>BUNDLE_PLUGIN_1_5</tag>
+    </version>
   </versions>
   <branches/>
   <mailingLists/>
